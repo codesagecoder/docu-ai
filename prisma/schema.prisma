@@ -23,3 +23,23 @@ model User {
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 }
+
+enum uploadStatus {
+  PENDING
+  PROCESSING
+  FAILED
+  SUCCESS
+}
+
+model File {
+  id    String @id @default(cuid())
+  name String
+
+  uploadStatus uploadStatus @default(PENDING)
+
+  url String
+  key String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
