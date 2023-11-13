@@ -34,3 +34,25 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## An AI powered document reader
+
+### Features
+
+- 🛠️ Complete SaaS Built From Scratch
+- 💻 Beautiful Landing Page & Pricing Page Included
+- 💳 Free & Pro Plan Using Stripe
+- 📄 A Beautiful And Highly Functional PDF Viewer
+- 🔄 Streaming API Responses in Real-Time
+- 🔒 Authentication Using Kinde
+- 🎨 Clean, Modern UI Using 'shadcn-ui'
+- 🚀 Optimistic UI Updates for a Great UX
+- ⚡ Infinite Message Loading for Performance
+- 📤 Intuitive Drag n’ Drop Uploads
+- ✨ Instant Loading States
+- 🔧 Modern Data Fetching Using tRPC & Zod
+- 🧠 LangChain for Infinite AI Memory
+- 🌲 Pinecone as our Vector Storage
+- 📊 Prisma as our ORM
+- 🔤 100% written in TypeScript
+- 🎁 ...much more
