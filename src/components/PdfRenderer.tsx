@@ -1,6 +1,7 @@
 'use client'
 
-import { Document,Page, pdfjs } from 'react-pdf';
+import { Loader2 } from 'lucide-react';
+import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
@@ -20,8 +21,16 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             </div>
             <div className="flex-1 w-full max-h-screen">
                 <div>
-                    <Document file={url} className='max-h-full' >
-                        <Page pageNumber={1}/>
+                    <Document
+                        loading={
+                            <div className='flex justify-center'>
+                                <Loader2 className='my-24 h-6 w-6 animate-spin'/>
+                            </div>
+                        }
+                        file={url}
+                        className='max-h-full'
+                    >
+                        <Page pageNumber={1} />
                     </Document>
                 </div>
             </div>
