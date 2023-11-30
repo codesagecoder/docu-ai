@@ -9,6 +9,10 @@ import { useResizeDetector } from 'react-resize-detector';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { cn } from '@/lib/utils';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -20,8 +24,25 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
     const [numPages, setNumPages] = useState<number>();
     const [currPage, setCurrPage] = useState<number>(1);
 
+    const customPageValidator = z.object({
+        page: z.string().refine((num) => Number(num) > 0 && Number(num) <= numPages!)
+    });
+
+    type TCustomPageValidator = z.infer<typeof customPageValidator>;
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue
+    } = useForm<TCustomPageValidator>({ defaultValues: { page: "1" }, resolver: zodResolver(customPageValidator) });
     const { width, ref } = useResizeDetector();
     const { toast } = useToast();
+
+    const handlePageSubmit = ({ page }: TCustomPageValidator) => {
+        setCurrPage(Number(page));
+        setValue("page", String(page));
+    };
 
     return (
         <div className='w-full bg-white rounded-md shadow flex flex-col items-center'>
@@ -32,7 +53,15 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
                     </Button>
 
                     <div className='flex items-center gap-1.5'>
-                        <Input className='w-12 h-8' />
+                        <Input
+                            className={cn('w-12 h-8', errors.page && 'focus-visible:ring-red-500')}
+                            {...register("page")}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSubmit(handlePageSubmit)();
+                                }
+                            }}
+                        />
                         <p className='text-zinc-700 text-sm space-x-1'>
                             <span>/</span>
                             <span>{numPages ?? "x"}</span>
