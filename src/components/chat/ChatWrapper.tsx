@@ -26,6 +26,7 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
                     <p className="text-zinc-500 text-sm">We&apos;re preparing your PDF.</p>
                 </div>
             </div>
+            <ChatInput isDisabled />
         </div>
     )
 
