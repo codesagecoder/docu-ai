@@ -1,4 +1,4 @@
-export const PANS = [
+export const PLANS = [
     {
         name: "Free",
         slug: "free",
