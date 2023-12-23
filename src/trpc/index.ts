@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
 import { z } from 'zod';
 import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query';
+import { absoluteUrl } from '@/lib/utils';
 
 export const appRouter = router({
     authCallback: publicProcedure.query(async () => {
@@ -32,6 +33,13 @@ export const appRouter = router({
         return await db.file.findMany({
             where: { id: userId }
         });
+    }),
+    createStripeSession: privateProcedure.mutation(({ ctx }) => {
+        const { userId } = ctx;
+
+        const billingUrl = absoluteUrl('/dashboard/billing');
+
+
     }),
     getFileMessages: privateProcedure
         .input(z.object({ limit: z.number().min(1).max(100).nullish(), cursor: z.string().nullish(), fileId: z.string() }))
