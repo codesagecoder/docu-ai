@@ -1,10 +1,12 @@
+import { PLANS } from "@/config/stripe";
 import { db } from "@/db";
+import { getPineconeClient } from "@/lib/pinecone";
+import { getUserSubscriptionPlan } from "@/lib/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
-import { getPineconeClient } from "@/lib/pinecone";
+import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();
 
@@ -16,7 +18,9 @@ export const ourFileRouter = {
 
       if (!user || !user.id) throw new Error("UNAUTHORIZED");
 
-      return { userId: user.id };
+      const subscriptionPlan = await getUserSubscriptionPlan();
+
+      return { userId: user.id, subscriptionPlan };
     })
     .onUploadComplete(async ({ file, metadata }) => {
       const createdFile = await db.file.create({
@@ -39,6 +43,18 @@ export const ourFileRouter = {
         const pageLevelDocs = await loader.load();
 
         const pagesAmt = pageLevelDocs.length;
+
+        const { subscriptionPlan: { isSubscribed } } = metadata;
+
+        const isProExceeded = pagesAmt > PLANS.find(plan => plan.name == 'Pro')!.pagesPerPdf;
+        const isFreeExceeded = pagesAmt > PLANS.find(plan => plan.name == 'Free')!.pagesPerPdf;
+
+        if ((isSubscribed && isProExceeded) || isFreeExceeded) {
+          await db.file.update({
+            data: { uploadStatus: 'FAILED' },
+            where: { id: createdFile.id }
+          })
+        }
 
         const pinecone = await getPineconeClient();
         const pineconeIndex = pinecone.Index('docu-ai');

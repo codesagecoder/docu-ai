@@ -1,13 +1,12 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { cn, constructMetadata } from '@/lib/utils'
 import Navbar from '@/components/Navbar'
 import Providers from '@/components/Providers'
+import { cn, constructMetadata } from '@/lib/utils'
+import { Inter } from 'next/font/google'
+import './globals.css'
 
-import 'react-loading-skeleton/dist/skeleton.css';
-import 'simplebar-react/dist/simplebar.min.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/toaster'
+import 'react-loading-skeleton/dist/skeleton.css'
+import 'simplebar-react/dist/simplebar.min.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
